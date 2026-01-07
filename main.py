@@ -79,12 +79,18 @@ def process_notifications(outage_id, district, aski_text):
 
 def send_push(token, title, body):
     try:
+        # APNs (Apple Push Notification service) ayarlarını ekliyoruz
         message = messaging.Message(
             notification=messaging.Notification(title=title, body=body),
-            token=token
+            token=token,
+            apns=messaging.APNSConfig(
+                payload=messaging.APNSPayload(
+                    aps=messaging.Aps(sound="default") # Ses çalması için kritik satır
+                )
+            )
         )
         messaging.send(message)
-        print(f"Bildirim gönderildi -> {token[:10]}...")
+        print(f"Bildirim (Sesli) gönderildi.")
     except Exception as e:
         print(f"Push hatası: {e}")
 
